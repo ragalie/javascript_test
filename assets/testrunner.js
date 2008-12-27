@@ -212,18 +212,22 @@ var config = {
 
 // Get resultsURL if it exists
 if (config.filters && config.filters.length > 0) {
-  var filters_t = config.filters;
-  for (int i = 0; i < config.filters.length; i++) {
-    if (config.filters[i].match(/^resultsURL/) != null) {
+  // Deep copy of config.filters
+  var filters_t = new Array;
+
+  for (var i = 0; i < config.filters.length; i++) {
+    if (config.filters[i].match(/^resultsURL=/) != null) {
       config.resultsURL = config.filters[i].split("=")[1];
-      filters_t.splice(i, 1);
     }
     else if (config.filters[i].match(/^t=/) != null) {
-      filters_t.spilce(i, 1);
+      // nop
+    }
+    else {
+      filters_t.push(config.filters[i]);
     }
   }
 
-  config.filters = filters_t;
+  config.filters = (filters_t.length > 0 ? filters_t : false);
 }
 
 // public API as global methods
